@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/headerPage :: headerPage"></div>
+<style>
+    .chart_con {
+        margin: 2em 1em 1em 1em;
+        background: aliceblue;
+        border-radius: 5px;
+        padding-top: 1em;
+    }
+    .chart_title{
+        font-size: 1.1em;
+    }
+    .form_chart_main {
+        margin-top: 2em;
+    }
+</style>
+
+<body >
+<div >
+    <div >
+        <div th:replace="fragments/headerSide :: headerSide"></div>
+    </div>
+    <div class="col col-lg-2">
+        <div th:replace="fragments/sidebarPage :: sidebarPage"></div>
+    </div>
+    <div class="col col-lg-10">
+        <div class="panel panel-default form_chart_main">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> chart</h3>
+            </div>
+            <div class="panel-body">
+                <form class="form-inline" role="form" style="float:left;">
+                    <div class="form-group has-feedback">
+                        <div class="input-group">
+                            <div class="input-group-addon">task number</div>
+                            <input type="text" class="form-control" id="num" placeholder="Input task number">
+                        </div>
+                    </div>
+<!--                     glyphicon-search-->
+                    <button onclick="addTask()" id="queryBtn" type="button" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> add Tasks</button>
+                </form>
+<!--                <button type="button" class="btn btn-danger" onclick="deleteAccounts()" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>-->
+<!--                <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='${cx}/account/add'"><i class="glyphicon glyphicon-plus"></i> 新增</button>-->
+                <hr style="clear:both;">
+                <div class="table-responsive">
+                    <div class=" chart_con" >
+                        <div class="chart_title">Education profile by Business function</div>
+                        <div id="main" style="width: 530px;height:400px;"></div>
+                    </div>
+                    <div class=" chart_con" >
+                        <div class="chart_title">Separation by region</div>
+                        <div id="main2" style="width: 530px;height:420px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<div th:replace="fragments/footerPage :: footerPage"></div>
+<script type="text/javascript">
+
+    function addTask(){
+        var api = "/start/jobs";
+        var num = $("#num").val();
+        if(num==""){
+            layer.msg("number is null!", {time: 3000, icon: 5});
+            return;
+        }
+        var jsonData={};
+        jsonData.num=num;
+        postJson(api, JSON.stringify(jsonData))
+        $("#num").val("");
+    }
+
+    var ItemId = "Item2_1";
+    var myChart = echarts.init(document.getElementById('main'));
+    var myChart2 = echarts.init(document.getElementById('main2'));
+    var option;
+    option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                    color: '#999'
+                }
+            }
+        },
+
+        xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: [120, 200, 150, 80, 70, 110, 130],
+                type: 'bar'
+            }
+        ]
+    };
+    myChart.setOption(option)
+
+
+    var option2 = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                    color: '#999'
+                }
+            }
+        },
+
+        // toolbox: {
+        //     feature: {
+        //         dataView: { show: true, readOnly: false },
+        //         magicType: { show: true, type: ['line', 'bar'] },
+        //         restore: { show: true },
+        //         saveAsImage: { show: true }
+        //     }
+        // },
+        // legend: {
+        //     data: ['Evaporation', 'Precipitation', 'Temperature']
+        // },
+        xAxis:
+            {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                axisPointer: {
+                    type: 'shadow'
+                }
+            }
+        ,
+        yAxis: [
+            {
+                type: 'value',
+                name: 'Precipitation',
+                min: 0,
+                max: 250,
+                interval: 50,
+                axisLabel: {
+                    formatter: '{value} ml'
+                }
+            },
+            {
+                type: 'value',
+                name: 'Temperature',
+                min: 0,
+                max: 25,
+                interval: 5,
+                axisLabel: {
+                    formatter: '{value} °C'
+                }
+            }
+        ],
+        series: [
+            {
+                name: 'Evaporation',
+                type: 'bar',
+                data: [
+                    2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3
+                ]
+            },
+            {
+                name: 'Precipitation',
+                type: 'bar',
+                data: [
+                    2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3
+                ]
+            },
+            {
+                name: 'Temperature',
+                type: 'line',
+                yAxisIndex: 1,
+                data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
+            }
+        ]
+    };
+    myChart2.setOption(option2)
+</script>
+</html>

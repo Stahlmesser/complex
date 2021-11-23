@@ -1,0 +1,29 @@
+server:
+  port: 7000
+  session-timeout: 60 # session 超时时间/分钟，默认是30
+  context-path: /demo # 全局虚拟路径
+  tomcat:
+    uri-encoding: utf-8 # 设置tomcat编码
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://database-robot.cwwxcociqa8v.eu-west-1.rds.amazonaws.com:3306/datacenter?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: yangroot
+  thymeleaf:
+    cache: false
+    prefix:  classpath:/templates/
+    check-template-location: true
+    suffix: .html
+    encoding: utf-8
+    mode: HTML
+  #这个是关键，放开springboot对静态资源的拦截
+  mvc:
+    static-path-pattern: /static/**
+  resources:
+    static-locations: classpath:/templates/,classpath:/resources/,classpath:/resources/,classpath:/static/
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml # The path where the configuration mapper file is located
+  type-aliases-package: com.complex.entity # Configure all class aliases under this package
