@@ -1,10 +1,9 @@
 package com.complex.datacenter;
 
 import com.complex.entity.Job;
+import com.complex.utils.RandomID;
 
-import java.util.LinkedList;
-import java.util.Vector;
-import java.util.Iterator;
+import java.util.*;
 
 public class DataCenter {
     private Vector<Server> servers;
@@ -26,7 +25,7 @@ public class DataCenter {
     public void initializtaion() {
         int nServers = 5;
         for(int i = 0; i < nServers; i++) {
-            Server server_=new Server(2,3);
+            Server server_=new Server(2,2);
             this.addServer(server_);
         }
     }
@@ -57,10 +56,15 @@ public class DataCenter {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        Job job=new Job(4);
-        Job job2=new Job(2);
-        Server server=new Server(2,3);
-        server.process(System.currentTimeMillis()/1000,job);
-        server.process(System.currentTimeMillis()/1000,job2);
+        DataCenter dataCenter = new DataCenter();
+        Server server=new Server(2,4);
+        int num=2;
+        List<Job> jobList = new ArrayList<>();
+        for (int i=0;i<num;i++){
+            Job job=new Job(RandomID.genID());
+            jobList.add(job);
+        }
+        server.process2(System.currentTimeMillis()/1000,jobList);
+        server.getInstantUtilization();
     }
 }

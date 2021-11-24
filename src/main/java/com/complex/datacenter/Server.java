@@ -2,6 +2,7 @@ package com.complex.datacenter;
 
 
 import com.complex.entity.Job;
+import com.complex.utils.RandomID;
 
 import java.util.*;
 
@@ -55,6 +56,45 @@ public class Server {
         this.totalJobs++;
     }
 
+
+    public void process2(final double time, final List<Job> jobList) throws InterruptedException {
+        Socket targetSocket = null;
+        Socket mostUtilizedSocket = null;
+        double highestUtilization = Double.MIN_VALUE;
+        Socket leastUtilizedSocket = null;
+        double lowestUtilization = Double.MAX_VALUE;
+
+        for (int i = 0; i < this.sockets.length; i++) {
+            Socket currentSocket = this.sockets[i];
+
+            double currentUtilization = currentSocket.getInstantUtilization();
+            System.err.println("currentUtilization1111-->"+currentUtilization);
+            if (currentUtilization > highestUtilization
+                    && currentSocket.getRemainingCapacity() > 0) {
+                highestUtilization = currentUtilization;
+                mostUtilizedSocket = currentSocket;
+            }
+
+            if (currentUtilization < lowestUtilization
+                    && currentSocket.getRemainingCapacity() > 0) {
+                lowestUtilization = currentUtilization;
+                leastUtilizedSocket = currentSocket;
+            }
+        }
+        targetSocket = leastUtilizedSocket;
+        for (int i=0;i<jobList.size();i++){
+            targetSocket.addJob(time, jobList.get(i));
+            this.jobToSocketMap.put( jobList.get(i), targetSocket);
+        }
+        double currentUtilization = targetSocket.getInstantUtilization();
+        System.err.println("currentUtilization222-->"+currentUtilization);
+        if(targetSocket.getRemainingCapacity()>0){
+            targetSocket.process(System.currentTimeMillis()/1000);
+        }
+        double currentUtilization2 = targetSocket.getInstantUtilization();
+        System.err.println("currentUtilization333-->"+currentUtilization2);
+
+    }
     public void process(final double time, final Job job) throws InterruptedException {
         Socket targetSocket = null;
         Socket mostUtilizedSocket = null;
@@ -64,8 +104,9 @@ public class Server {
 
         for (int i = 0; i < this.sockets.length; i++) {
             Socket currentSocket = this.sockets[i];
-            double currentUtilization = currentSocket.getInstantUtilization();
 
+            double currentUtilization = currentSocket.getInstantUtilization();
+            System.err.println("currentUtilization1111-->"+currentUtilization);
             if (currentUtilization > highestUtilization
                     && currentSocket.getRemainingCapacity() > 0) {
                 highestUtilization = currentUtilization;
@@ -80,10 +121,14 @@ public class Server {
         }
         targetSocket = leastUtilizedSocket;
         targetSocket.addJob(time, job);
+        double currentUtilization = targetSocket.getInstantUtilization();
+        System.err.println("currentUtilization222-->"+currentUtilization);
         this.jobToSocketMap.put(job, targetSocket);
         if(targetSocket.getRemainingCapacity()>0){
             targetSocket.process(System.currentTimeMillis()/1000);
         }
+        double currentUtilization2 = targetSocket.getInstantUtilization();
+        System.err.println("currentUtilization333-->"+currentUtilization2);
 
     }
 
@@ -126,7 +171,13 @@ public class Server {
         Job job=new Job(4);
         Job job2=new Job(2);
         Server server=new Server(2,3);
-        server.process(System.currentTimeMillis()/1000,job);
-        server.process(System.currentTimeMillis()/1000,job2);
+        int num=2;
+        for (int i=0;i<num;i++){
+//            Job job2=new Job(RandomID.genID());
+
+        }
+//        server.getInstantUtilization();
+//        server.process(System.currentTimeMillis()/1000,job);
+//        server.process(System.currentTimeMillis()/1000,job2);
     }
 }

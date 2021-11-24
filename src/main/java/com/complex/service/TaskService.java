@@ -18,4 +18,16 @@ public class TaskService {
     public void insertJobs(HashMap job) {
         taskMapper.insertJobs(job);
     }
+
+    public void insertCPU(HashMap keyset) {
+        taskMapper.insertCPU(keyset);
+    }
+
+    public List<String> queryAllCPUTime(HashMap map) {
+        return   taskMapper.queryAllCPUTime(map);
+    }
+
+    public List<Integer> queryAllCPU(HashMap map) {
+        return   taskMapper.queryAllCPU(map);
+    }
 }

@@ -1,132 +1,62 @@
-function genID(){
-    return Number(Math.random().toString().substr(3,6) );
-}
-
-//携带json参数的
-function postJson(api,param) {
-    var loadingIndex=null;
-    var res = "";
+/**
+ * ajax 方法
+ */
+function ajax(url, params, method, callBack) {
     $.ajax({
-        type: "POST",
-        processData: false,
-        contentType: "application/json",
-        url: api,
-        data: param,
-        dataType: "json",
-        cache: false,
-        async: false, // 同步
-        beforeSend : function() {
-            loadingIndex = layer.msg('处理中', {icon: 16});
+        url : url,
+        type : method,
+        data: params,
+        headers: {
+            "Authorization": "Basic " + btoa("admin" + ":" + "698d51a19d8a121ce581499d7b701668")
         },
-        success: function (result) {
-            layer.close(loadingIndex);
-            console.info(result);
-            if (result.errcode == 0 || result.code==0) {
-                if(result.errcode==0){
-                    if(result.errmsg!=""){
-                        layer.msg(result.errmsg, {time: 3000, icon: 6});
-                    }
-                }else{
-                    layer.msg(result.msg, {time: 3000, icon: 6});
-                }
-            } else {
-                if(result.errcode!=0){
-                    layer.msg(result.errmsg, {time: 3000, icon: 5});
-                }else{
-                    layer.msg(result.msg, {time: 3000, icon: 5});
-                }
-            }
-            res= result;
+        dataType : "json",
+        success : function(json) {
+            callBack(json);
         },
-        error: function () {
-            layer.msg("ajax请求失败", {time: 3000, icon: 5});
+        error : function(json) {
+            alert("访问出错！");
+            return false;
         }
     });
-    return res;
 }
 
-
-//不是携带json参数，单独一个参数的   id
-function postParam(api,id) {
-    var loadingIndex=null;
-    var res=""
-    $.ajax({
-        type: "POST",
-        processData: false,
-        contentType: "application/json",
-        url: api,
-        data: id,
-        dataType: "json",
-        cache: false,
-        async: false, // 同步
-        beforeSend : function() {
-            loadingIndex = layer.msg('处理中', {icon: 16});
-        },
-        success: function (result) {
-            layer.close(loadingIndex);
-            if (result.errcode == 0 || result.code==0) {
-                if (result.errcode == 0) {
-                    if(result.errmsg!=""){
-                        layer.msg(result.errmsg, {time: 3000, icon: 6});
-                    }
-                } else {
-                    layer.msg(result.msg, {time: 3000, icon: 6});
-                }
-            } else {
-                if(result.errcode!=0){
-                    layer.msg(result.errmsg, {time: 3000, icon: 5});
-                }else{
-                    layer.msg(result.msg, {time: 3000, icon: 5});
-                }
-            }
-            res= result;
-            return res;
-        },
-        error: function () {
-            layer.msg("ajax请求失败", {time: 3000, icon: 5});
+function adminReq(admin,url, params, method, callBack){
+    admin.req({
+        url: url //实际使用请改成服务端真实接口
+        , data: params//这里把数据封装成json的了，在springmvc里面会自己解析。
+        , datatype:'json'
+        , method:method
+        , done: function (json) {
+            callBack(json);
         }
     });
-    return res;
+}
+/**
+ * post 方法
+ */
+function ajaxPost(url, params, callBack) {
+    ajax(url,params,"post",callBack);
+}
 
+/**
+ * get 方法
+ */
+function ajaxGet(url, params, callBack) {
+    ajax(url,params,"get",callBack);
 }
 
 
 
-function postJsonNoParam(api) {
-    var res = "";
-    $.ajax({
-        type : "POST",
-        processData: false,
-        contentType: "application/json",
-        url  : api,
-        cache: false,
-        async: false, // 同步
-        success: function (result) {
-            if (result.errcode == 0 || result.code==0) {
-                if(result.errcode==0){
-                    if(result.errmsg!=""){
-                        layer.msg(result.errmsg, {time: 3000, icon: 6});
-                    }
-                } else {
-                    layer.msg(result.msg, {time: 3000, icon: 6});
-                }
-            } else {
-                if(result.errcode!=0){
-                    layer.msg(result.errmsg, {time: 3000, icon: 5});
-                }else{
-                    layer.msg(result.msg, {time: 3000, icon: 5});
-                }
-            }
-            res=result
-        },
-        error: function () {
-            layer.msg("ajax请求失败", {time: 3000, icon: 5});
-        }
-    });
-    return res;
+/**
+ * post 方法
+ */
+function ajaxPostAdmin(admin,url, params, callBack) {
+    adminReq(admin,url,params,"post",callBack);
 }
 
-function getParam(api) {
-
+/**
+ * get 方法
+ */
+function ajaxGetAdmin(admin,url, params, callBack) {
+    adminReq(admin,url,params,"get",callBack);
 }
-

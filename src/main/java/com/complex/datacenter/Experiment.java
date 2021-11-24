@@ -1,6 +1,10 @@
 package com.complex.datacenter;
 
 import com.complex.entity.Job;
+import com.complex.utils.RandomID;
+import lombok.SneakyThrows;
+
+import java.util.Iterator;
 
 public class Experiment {
     private long nEventsProcessed;
@@ -17,20 +21,20 @@ public class Experiment {
         this.dataCenter = dataCenter;
     }
 
-    public void run() {
+    public void run() throws InterruptedException {
         long startTime = System.currentTimeMillis()/1000;
         this.nEventsProccessed = 0;
         System.out.println("Starting simulation");
-        Job job1=new Job(5);
-        Job job2=new Job(5);
-//        Iterator<Server> iter = dataCenter.getServers().iterator();
-//        while (iter.hasNext()) {
-//            iter.next().startJobService(startTime,job1);
-//        }
+        Iterator<Server> iter = dataCenter.getServers().iterator();
+        while (iter.hasNext()) {
+            Job job1=new Job( RandomID.genID());
+            iter.next().process(startTime,job1);
+        }
 
     }
 
 
+    @SneakyThrows
     public static void main(String[] args) {
         DataCenter dataCenter=new DataCenter();
         dataCenter.initializtaion();

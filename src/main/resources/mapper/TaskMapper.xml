@@ -14,15 +14,30 @@
                                           #{startDate},
                                           #{finishDate})
     </insert>
+    <insert id="insertCPU">
+        insert into datacenter.cpu_date(cid,utilization,cdate)
+        values(#{cid},
+               #{utilization},
+               #{cdate}
+              )
+    </insert>
 
-    <update id="updateTasksShow" parameterType="hashmap">
-        update Root.task_robots
-        <set>
-            <if test="is_show_task != null">
-                is_show_task = #{is_show_task},
+
+    <select id="queryAllCPUTime" resultType="java.lang.String">
+        select DISTINCT(cdate)
+        from datacenter.utilization
+            limit #{pageno},#{rows}
+    </select>
+    <select id="queryAllCPU" resultType="java.lang.Integer">
+        select utilization
+        from datacenter.utilization
+        <where>
+        1=1
+            <if test="cid !=null">
+                and  cid=#{cid}
             </if>
-        </set>
-        where tid = #{tid} and rid=#{rid}
-    </update>
+        </where>
+          limit #{pageno},#{rows}
+    </select>
 
 </mapper>
