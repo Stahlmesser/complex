@@ -13,14 +13,12 @@ public class Core {
     private int coreId;
 
     private double dynamicPower;
-    private double parkPower;
     private double idlePower;
 
     public Core() {
         this.job = null;
         this.speed = 2.0;
         dynamicPower = 40.0 * (4.0 / 5.0) / 2;
-        parkPower = 0;
         idlePower = dynamicPower / 5.0;
     }
 
@@ -43,7 +41,16 @@ public class Core {
             job.setStartDate(t.toString());
         }
     }
-
+    
+    public double getPower() {
+        if (this.job != null){
+            return this.dynamicPower - this.idlePower;
+        }else{
+            return this.idlePower;
+        }
+    }
+    
+    
     @SneakyThrows
     public void process(double time) {
         if (this.job != null){
