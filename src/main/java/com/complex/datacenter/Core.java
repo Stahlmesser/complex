@@ -43,7 +43,14 @@ public class Core {
             job.setStartDate(t.toString());
         }
     }
-
+    
+    public double getPower() {
+   
+        return this.dynamicPower - this.idlePower;
+    
+    }
+    
+    
     @SneakyThrows
     public void process(double time) {
         if (this.job != null){
