@@ -165,7 +165,13 @@ public class Server {
         return nInService;
     }
 
-
+    public double getPower() {
+        double power = 0.0;
+        for (int i = 0; i < this.sockets.length; i++) {
+            power += this.sockets[i].getPower();
+        }
+       return power;
+    }
 
     public static void main(String[] args) throws InterruptedException {
         Job job=new Job(4);
