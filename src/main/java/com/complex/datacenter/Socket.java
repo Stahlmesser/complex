@@ -121,6 +121,17 @@ public class Socket {
         }
     }
 
+     public double getPower() {
+          double power=0.0;
+          Iterator<Core> coreIter = this.getCores().iterator();
+           while (coreIter.hasNext()) {
+                Core core = coreIter.next();
+                double corePower = core.getPower();
+                power += corePower;
+            }
+         return power;
+     }
+    
     public static void main(String[] args) {
 //        Server server=new Server(2,2);
         Socket socket=new Socket(6);
